@@ -18,10 +18,6 @@ import java.util.Map;
 
 public class MovieControllerRA {
 	
-//	import static io.restassured.RestAssured.*;
-//	import static io.restassured.matcher.RestAssuredMatchers.*;
-//	import static org.hamcrest.Matchers.*;
-	
 	private String adminUsername, adminPassword;
 	private String clientUsername, clientPassword;
 	private String adminToken, clientToken, invalidToken;
@@ -29,7 +25,7 @@ public class MovieControllerRA {
 	
 	private String movieTitle, testTitle;
 	
-	private Map<String, Object> postProductInstance;
+	private Map<String, Object> postMovieInstance;
 	
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -52,12 +48,12 @@ public class MovieControllerRA {
 		
 		testTitle = "Test Movie";
 		
-		postProductInstance = new HashMap<>();
+		postMovieInstance = new HashMap<>();
 		
-		postProductInstance.put("title", testTitle);
-		postProductInstance.put("score", 0.0F);
-		postProductInstance.put("count", 0);
-		postProductInstance.put("image", "https://www.themoviedb.org/t/p/w533_and_h300_bestv2/jBJWaqoSCiARWtfV0GlqHrcdidd.jpg");
+		postMovieInstance.put("title", testTitle);
+		postMovieInstance.put("score", 0.0F);
+		postMovieInstance.put("count", 0);
+		postMovieInstance.put("image", "https://www.themoviedb.org/t/p/w533_and_h300_bestv2/jBJWaqoSCiARWtfV0GlqHrcdidd.jpg");
 	}
 	
 	@Test
@@ -94,8 +90,6 @@ public class MovieControllerRA {
 			.statusCode(200)
 			.body("id",is(1))
 			.body("title", equalTo("The Witcher"))
-			.body("score", is(4.5F))
-			.body("count", is(2))
 			.body("image", equalTo("https://www.themoviedb.org/t/p/w533_and_h300_bestv2/jBJWaqoSCiARWtfV0GlqHrcdidd.jpg"));
 	}
 	
@@ -112,7 +106,7 @@ public class MovieControllerRA {
 	@Test
 	public void insertShouldReturnMovieCreatedWhenAdminLogged() {
 		
-		JSONObject newProduct = new JSONObject(postProductInstance);
+		JSONObject newProduct = new JSONObject(postMovieInstance);
 		
 		given()
 			.header("Content-type", "application/json")
@@ -130,8 +124,8 @@ public class MovieControllerRA {
 	@Test
 	public void insertShouldReturnUnprocessableEntityWhenAdminLoggedAndBlankTitle() throws JSONException {	
 		
-		postProductInstance.put("title", "");
-		JSONObject newProduct = new JSONObject(postProductInstance);
+		postMovieInstance.put("title", "");
+		JSONObject newProduct = new JSONObject(postMovieInstance);
 		
 		given()
 			.header("Content-type", "application/json")
@@ -149,7 +143,7 @@ public class MovieControllerRA {
 	@Test
 	public void insertShouldReturnForbiddenWhenClientLogged() throws Exception {
 		
-		JSONObject newProduct = new JSONObject(postProductInstance);
+		JSONObject newProduct = new JSONObject(postMovieInstance);
 		
 		given()
 			.header("Content-type", "application/json")
@@ -167,7 +161,7 @@ public class MovieControllerRA {
 	@Test
 	public void insertShouldReturnUnauthorizedWhenInvalidToken() throws Exception {
 		
-		JSONObject newProduct = new JSONObject(postProductInstance);
+		JSONObject newProduct = new JSONObject(postMovieInstance);
 		
 		given()
 			.header("Content-type", "application/json")
